@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  
+}
+
+enum Role {
+  CLIENT
+  SALES
+  ADMIN
+}
+
+enum ItemType {
+  SERVICE
+  PRODUCT
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  password     String
+  firstName    String
+  lastName     String
+  role         Role      @default(CLIENT)
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  registration  Registration?
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model Event {
+  id           String   @id @default(uuid())
+  name         String
+  description  String?
+  capacity     Int
+  confirmedCount Int    @default(0)
+  eventDate    DateTime
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  registrations Registration[]
+
+  @@map("events")
+}
+
+model CatalogItem {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  type        ItemType
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  registrationItems RegistrationItem[]
+
+  @@map("catalog_items")
+}
+
+model Registration {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  eventId          String
+  attendanceDate   DateTime
+  serviceDiscount  Decimal  @default(0) @db.Decimal(5, 2)
+  productDiscount  Decimal  @default(0) @db.Decimal(5, 2)
+  totalServices    Decimal  @default(0) @db.Decimal(10, 2)
+  totalProducts    Decimal  @default(0) @db.Decimal(10, 2)
+  status           String   @default("CONFIRMED")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user              User               @relation(fields: [userId], references: [id])
+  event             Event              @relation(fields: [eventId], references: [id])
+  items             RegistrationItem[]
+  notificationLogs  NotificationLog[]
+
+  @@map("registrations")
+}
+
+model RegistrationItem {
+  id             String      @id @default(uuid())
+  registrationId String
+  catalogItemId  String
+  priceAtTime    Decimal     @db.Decimal(10, 2)
+  createdAt      DateTime    @default(now())
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  catalogItem  CatalogItem  @relation(fields: [catalogItemId], references: [id])
+
+  @@unique([registrationId, catalogItemId])
+  @@map("registration_items")
+}
+
+model NotificationLog {
+  id             String             @id @default(uuid())
+  registrationId String
+  payload        Json
+  status         NotificationStatus @default(PENDING)
+  attempts       Int                @default(0)
+  lastError      String?
+  sentAt         DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  registration Registration @relation(fields: [registrationId], references: [id])
+
+  @@map("notification_logs")
+}

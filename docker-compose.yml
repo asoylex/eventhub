@@ -3,18 +3,17 @@ version: '3.9'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: eventhub_db
-    restart: unless-stopped
+    container_name: eventhub_postgres
     environment:
       POSTGRES_USER: eventhub_user
       POSTGRES_PASSWORD: eventhub_pass
       POSTGRES_DB: eventhub_db
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U eventhub_user -d eventhub_db']
+      test: ["CMD-SHELL", "pg_isready -U eventhub_user -d eventhub_db"]
       interval: 10s
       timeout: 5s
       retries: 5
