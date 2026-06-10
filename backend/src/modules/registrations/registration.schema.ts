@@ -6,3 +6,5 @@ export const createRegistrationSchema = z.object({
     .array(z.string().min(1, 'Invalid item ID'))
     .min(1, 'Select at least one item'),
 })
+
+export type CreateRegistrationInput = z.infer<typeof createRegistrationSchema>
