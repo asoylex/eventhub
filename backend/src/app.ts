@@ -9,12 +9,15 @@ import authRouter from './modules/auth/auth.router'
 import catalogRouter from './modules/catalog/catalog.router'
 import eventRouter from './modules/events/event.router'
 import registrationRouter from './modules/registrations/registration.router'
+import notificationRouter from './modules/notifications/notification.router'
+
 
 import { errorHandler } from './middlewares/errorHandler'
 import { logger } from './utils/logger'
 import { env } from './config/env'
 
 const app = express()
+
 
 // ── Seguridad ────────────────────────────────────────────────────────────────
 app.use(helmet())
@@ -37,7 +40,7 @@ const limiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20, // más estricto para auth
+  max: 100, // más estricto para auth
   message: { success: false, message: 'Too many login attempts.' },
 })
 
@@ -57,6 +60,8 @@ app.use('/api/auth', authLimiter, authRouter)
 app.use('/api/catalog', catalogRouter)
 app.use('/api/events', eventRouter)
 app.use('/api/registrations', registrationRouter)
+app.use('/api/notifications', notificationRouter)
+
 
 // ── 404 ──────────────────────────────────────────────────────────────────────
 app.use((_, res) => {

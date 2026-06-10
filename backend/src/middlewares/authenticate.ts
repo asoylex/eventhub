@@ -12,12 +12,20 @@ export const authenticate = (
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization
+  const queryToken = req.query.token as string
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return sendError(res, 'No token provided', 401)
+  // Lee del header primero, si no existe lee del query param (para SSE)
+  let token: string | undefined
+
+  if (authHeader?.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1]
+  } else if (queryToken) {
+    token = queryToken
   }
 
-  const token = authHeader.split(' ')[1]
+  if (!token) {
+    return sendError(res, 'No token provided', 401)
+  }
 
   try {
     const payload = verifyAccessToken(token)

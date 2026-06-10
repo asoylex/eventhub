@@ -1,5 +1,6 @@
 import { logger } from '../../utils/logger'
 import prisma from '../../config/database'
+import { broadcastToSales } from './sse.service'
 
 interface NotificationPayload {
   registrationId: string
@@ -72,6 +73,17 @@ const sendNotification = async (payload: NotificationPayload) => {
       '✅ Sales team notified'
     )
 
+    broadcastToSales({
+      type: 'NEW_REGISTRATION',
+      message: `Nueva confirmación — ${payload.userName}`,
+      client: payload.userName,
+      email: payload.userEmail,
+      serviceDiscount: payload.serviceDiscount,
+      productDiscount: payload.productDiscount,
+      items: payload.items,
+      timestamp: new Date().toISOString(),
+    })
+    
     // Marca como enviado en DB
     await prisma.notificationLog.updateMany({
       where: { registrationId: payload.registrationId, status: 'PENDING' },
