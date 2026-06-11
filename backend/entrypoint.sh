@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-echo " Corriendo migraciones..."
-npx prisma migrate deploy
+echo "Sincronizando schema con la base de datos..."
+npx prisma db push --accept-data-loss
 
 echo " Corriendo seed..."
 node dist/prisma/seed.js
