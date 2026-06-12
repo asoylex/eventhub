@@ -7,7 +7,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  console.log('🌱 Seeding database...')
+  console.log('Seeding database...')
 
   // Evento principal
   const event = await prisma.event.upsert({
@@ -101,12 +101,12 @@ async function main() {
     },
   })
 
-  console.log('✅ Seed completado')
-  console.log(`📅 Evento: ${event.name} (cupo: ${event.capacity})`)
-  console.log(`🛠  Servicios: ${services.length}`)
-  console.log(`📦 Productos: ${products.length}`)
-  console.log(`👤 Admin: admin@eventhub.com / Admin123!`)
-  console.log(`👤 Ventas: ventas@eventhub.com / Sales123!`)
+  console.log('Seed completado')
+  console.log(`Evento: ${event.name} (cupo: ${event.capacity})`)
+  console.log(`Servicios: ${services.length}`)
+  console.log(`Productos: ${products.length}`)
+  console.log(`Admin: admin@eventhub.com / Admin123!`)
+  console.log(`Ventas: ventas@eventhub.com / Sales123!`)
 }
 
 main()

@@ -73,8 +73,8 @@ app.use(errorHandler)
 
 // ── Arrancar servidor ─────────────────────────────────────────────────────────
 app.listen(env.PORT, () => {
-  logger.info(`🚀 EventHub API running on http://localhost:${env.PORT}`)
-  logger.info(`📦 Environment: ${env.NODE_ENV}`)
+  logger.info(`EventHub API running on http://localhost:${env.PORT}`)
+  logger.info(`Environment: ${env.NODE_ENV}`)
 })
 
 export default app
