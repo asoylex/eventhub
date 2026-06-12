@@ -28,7 +28,7 @@ export const enqueueNotification = (payload: NotificationPayload) => {
   queue.push(payload)
   logger.info(
     { registrationId: payload.registrationId },
-    '📬 Notification enqueued'
+    'Notification enqueued'
   )
   processQueue()
 }
@@ -70,7 +70,7 @@ const sendNotification = async (payload: NotificationPayload) => {
           },
         },
       },
-      '✅ Sales team notified'
+      'Sales team notified'
     )
 
     broadcastToSales({
@@ -83,7 +83,7 @@ const sendNotification = async (payload: NotificationPayload) => {
       items: payload.items,
       timestamp: new Date().toISOString(),
     })
-    
+
     // Marca como enviado en DB
     await prisma.notificationLog.updateMany({
       where: { registrationId: payload.registrationId, status: 'PENDING' },
@@ -92,7 +92,7 @@ const sendNotification = async (payload: NotificationPayload) => {
   } catch (error) {
     logger.error(
       { error, registrationId: payload.registrationId },
-      '❌ Notification failed'
+      'Notification failed'
     )
 
     await prisma.notificationLog.updateMany({
