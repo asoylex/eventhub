@@ -1,0 +1,20 @@
+node_modules
+dist
+.env
+logs
+*.log
+test-concurrency*
+reset-test*
+.git
+README.md
+prisma/migrations
+EOF
+
+# Frontend
+cat > /root/eventhub/frontend/.dockerignore << 'EOF'
+node_modules
+.next
+.env.local
+*.log
+.git
+README.md
