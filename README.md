@@ -271,3 +271,12 @@ Usuario
 ```
 
 El servidor es un Droplet de DigitalOcean con Ubuntu 24.04. Nginx actúa como reverse proxy y Cloudflare maneja el SSL y la protección del dominio. Los tres servicios corren como contenedores Docker orquestados con Docker Compose.
+
+
+## ARCHIVOS 
+
+**POSTMAN**
+EventHub API.postman_collection.json
+
+**DIAGRAMA ER**
+EVENT HUB ER.png
